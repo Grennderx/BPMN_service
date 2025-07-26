@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.signavio.com/bpmn20" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bpmndi:BPMNDiagram id="id8041f646-4240-4482-89ae-0301e5017584" name="Main Diagram">
+    <bpmndi:BPMNPlane id="id59e59274-805e-4586-ac68-d129e6465e65" bpmnElement="idca92012a-6e29-4497-9e36-8c87a96c15fd">
+      <bpmndi:BPMNShape id="id7121427e-5745-47e7-8654-e675f018f958_gui" bpmnElement="id7121427e-5745-47e7-8654-e675f018f958">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="id3fbc7173-7991-4ae4-abad-c903966dcc93_gui" bpmnElement="id3fbc7173-7991-4ae4-abad-c903966dcc93">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c_gui" bpmnElement="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="id2f246aae-00a1-4759-9e29-20ccd62a2665_gui" bpmnElement="id2f246aae-00a1-4759-9e29-20ccd62a2665">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="id8ad05f86-420a-4c6f-8773-513890afcb2f_gui" bpmnElement="id8ad05f86-420a-4c6f-8773-513890afcb2f">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="idc1a36373-48af-415c-bbcd-7aff74185c47_gui" bpmnElement="idc1a36373-48af-415c-bbcd-7aff74185c47">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="idc619724c-05da-44e0-9923-3c3b16c56685_gui" bpmnElement="idc619724c-05da-44e0-9923-3c3b16c56685">
+        <omgdc:Bounds width="100" height="100" x="100" y="100" />
+      </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="id419e1aa5-b2c7-45ca-bb65-f928ccee3607_gui" bpmnElement="id419e1aa5-b2c7-45ca-bb65-f928ccee3607">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="idf6c4775b-4f47-4014-8d81-17a638943c4f_gui" bpmnElement="idf6c4775b-4f47-4014-8d81-17a638943c4f">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="id8385f608-3baa-4331-b0bf-862356cead18_gui" bpmnElement="id8385f608-3baa-4331-b0bf-862356cead18">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="id8885f837-90e4-4aec-babd-fdd585e3ef0f_gui" bpmnElement="id8885f837-90e4-4aec-babd-fdd585e3ef0f">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="id0df835a9-3153-4a28-a638-89504034247e_gui" bpmnElement="id0df835a9-3153-4a28-a638-89504034247e">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="idbed341d0-1ce1-4341-8af2-9a65b32d7560_gui" bpmnElement="idbed341d0-1ce1-4341-8af2-9a65b32d7560">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="idf2acfbd1-d30d-4fe5-a4be-1d7c9058f081_gui" bpmnElement="idf2acfbd1-d30d-4fe5-a4be-1d7c9058f081">
+        <omgdi:waypoint x="100" y="100" />
+      <omgdi:waypoint x="100" y="100" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+<process id="idca92012a-6e29-4497-9e36-8c87a96c15fd" isClosed="false" isExecutable="false" processType="None">
+    <startEvent id="id7121427e-5745-47e7-8654-e675f018f958" name="Начало" parallelMultiple="false" isInterrupting="true">
+      <outgoing>id419e1aa5-b2c7-45ca-bb65-f928ccee3607</outgoing>
+    <messageEventDefinition id="idd92008b1-3fc3-4a90-9801-1b02c967f8ae" />
+    </startEvent>
+  <task id="id3fbc7173-7991-4ae4-abad-c903966dcc93" name="Проверка наличия лекарства">
+      <incoming>id419e1aa5-b2c7-45ca-bb65-f928ccee3607</incoming>
+    <outgoing>idf6c4775b-4f47-4014-8d81-17a638943c4f</outgoing>
+    </task>
+  <parallelGateway id="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c" name="Ветвление" gatewayDirection="Unspecified">
+      <incoming>idf6c4775b-4f47-4014-8d81-17a638943c4f</incoming>
+    <outgoing>id8385f608-3baa-4331-b0bf-862356cead18</outgoing>
+    <outgoing>id8885f837-90e4-4aec-babd-fdd585e3ef0f</outgoing>
+    </parallelGateway>
+  <task id="id2f246aae-00a1-4759-9e29-20ccd62a2665" name="Заказать лекарство">
+      <incoming>id8385f608-3baa-4331-b0bf-862356cead18</incoming>
+    <outgoing>id0df835a9-3153-4a28-a638-89504034247e</outgoing>
+    </task>
+  <task id="id8ad05f86-420a-4c6f-8773-513890afcb2f" name="Подтвердить заказ">
+      <incoming>id8885f837-90e4-4aec-babd-fdd585e3ef0f</incoming>
+    <outgoing>idbed341d0-1ce1-4341-8af2-9a65b32d7560</outgoing>
+    </task>
+  <task id="idc1a36373-48af-415c-bbcd-7aff74185c47" name="Получить лекарство">
+      <incoming>id0df835a9-3153-4a28-a638-89504034247e</incoming>
+    <incoming>idbed341d0-1ce1-4341-8af2-9a65b32d7560</incoming>
+    <outgoing>idf2acfbd1-d30d-4fe5-a4be-1d7c9058f081</outgoing>
+    </task>
+  <endEvent id="idc619724c-05da-44e0-9923-3c3b16c56685" name="Завершение">
+      <incoming>idf2acfbd1-d30d-4fe5-a4be-1d7c9058f081</incoming>
+    <terminateEventDefinition id="id81878e76-689d-41d3-b72a-9a045f3c136d" />
+    </endEvent>
+  <sequenceFlow id="id419e1aa5-b2c7-45ca-bb65-f928ccee3607" name="Поток" sourceRef="id7121427e-5745-47e7-8654-e675f018f958" targetRef="id3fbc7173-7991-4ae4-abad-c903966dcc93" />
+  <sequenceFlow id="idf6c4775b-4f47-4014-8d81-17a638943c4f" name="Поток" sourceRef="id3fbc7173-7991-4ae4-abad-c903966dcc93" targetRef="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c" />
+  <sequenceFlow id="id8385f608-3baa-4331-b0bf-862356cead18" name="Поток" sourceRef="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c" targetRef="id2f246aae-00a1-4759-9e29-20ccd62a2665" />
+  <sequenceFlow id="id8885f837-90e4-4aec-babd-fdd585e3ef0f" name="Поток" sourceRef="id8d51c49a-39bd-4dc3-bda6-b632f683fe7c" targetRef="id8ad05f86-420a-4c6f-8773-513890afcb2f" />
+  <sequenceFlow id="id0df835a9-3153-4a28-a638-89504034247e" name="Поток" sourceRef="id2f246aae-00a1-4759-9e29-20ccd62a2665" targetRef="idc1a36373-48af-415c-bbcd-7aff74185c47" />
+  <sequenceFlow id="idbed341d0-1ce1-4341-8af2-9a65b32d7560" name="Поток" sourceRef="id8ad05f86-420a-4c6f-8773-513890afcb2f" targetRef="idc1a36373-48af-415c-bbcd-7aff74185c47" />
+  <sequenceFlow id="idf2acfbd1-d30d-4fe5-a4be-1d7c9058f081" name="Поток" sourceRef="idc1a36373-48af-415c-bbcd-7aff74185c47" targetRef="idc619724c-05da-44e0-9923-3c3b16c56685" />
+  </process>
+</definitions>

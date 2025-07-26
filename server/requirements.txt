@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+llama-cpp-python
+bpmn_python
+flask-cors
+flask
+requests
+dotenv
+huggingface-hub
+python-multipart

@@ -1,0 +1,17 @@
+server:
+  host: 0.0.0.0
+  port: 8000
+
+tools:
+  - name: bpmn_generator
+    description: Генерация BPMN-диаграмм через Llama
+    function: bpmn_agent.generate_diagram
+    parameters:
+      - name: process_description
+        type: string
+        description: Описание бизнес-процесса
+
+models:
+  - name: local_llama
+    type: local
+    path: C:\Users\borga\.lmstudio\models\lmstudio-community\Qwen2.5-7B-Instruct-1M-GGUF\Qwen2.5-7B-Instruct-1M-Q4_K_M.gguf  # Путь к вашей модели
