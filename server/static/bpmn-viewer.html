@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BPMN Viewer</title>
+    <script src="https://unpkg.com/bpmn-js@10.2.0/dist/bpmn-viewer.development.js"></script>
+</head>
+<body>
+    <div id="canvas" style="height: 600px"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const viewer = new BpmnJS({
+                container: '#canvas',
+                autoPlace: true  // Автоматическое позиционирование
+            });
+            
+            try {
+                const bpmnXml = `[[BPMN_XML]]`;
+                await viewer.importXML(bpmnXml);
+                viewer.get('canvas').zoom('fit-viewport');
+                console.log("BPMN успешно загружен");
+            } catch (err) {
+                console.error("Ошибка валидации BPMN:", err);
+                alert("Ошибка: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

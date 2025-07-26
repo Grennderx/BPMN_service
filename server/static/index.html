@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор BPMN с голосовым управлением</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- bpmn-js -->
+  <script src="https://unpkg.com/bpmn-js@10.2.0/dist/bpmn-viewer.development.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f4f6f8; }
+    .command-box { background: white; border-radius: .5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    #btnStartRec.recording { background: #f44336 !important; }
+  </style>
+</head>
+<body class="p-6">
+  <h1 class="text-3xl font-bold mb-6">Генератор BPMN с возможностью голосового описания процесса</h1>
+  <div class="command-box p-6 mb-8">
+    <h6 class="text-xl font-semibold mb-4">Для голосового описания нажмите "Говорить", после чего нажмите "Создать цепочку"</h6>
+  </div>
+  <div class="command-box p-4 mb-4 flex flex-wrap gap-4 items-center">
+    <button id="btnGenerateChain" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition">Создать цепочку</button>
+    <textarea id="processDescription" class="flex-1 p-2 border rounded" placeholder="Опишите процесс..." rows="1"></textarea>
+    <button id="btnStartRec" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center">
+      <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1v11m0 0a2 2 0 01-2-2V5a2 2 0 114 0v5a2 2 0 01-2 2z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-14 0M12 18v4"/>
+      </svg>
+      Говорить
+    </button>
+    <input id="saveChainName" type="text" class="p-2 border rounded flex-shrink w-40" placeholder="Имя цепочки" disabled>
+    <button id="btnSaveChain" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Сохранить</button>
+    <select id="savedChains" class="p-2 border rounded flex-shrink w-40"></select>
+    <button id="btnLoadChain" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">Загрузить</button>
+    <input id="diagramName" type="text" class="p-2 border rounded flex-shrink w-40" placeholder="Имя диаграммы">
+    <button id="btnGenerateBPMN" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition">Создать BPMN</button>
+    <input id="existingDiagram" type="text" class="p-2 border rounded flex-shrink w-40" placeholder="diagram.bpmn">
+    <button id="btnVisualize" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">Загрузить диаграмму</button>
+    <button id="btnAnalyze" class="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition">Анализ</button>
+    <button id="btnApplyFixes" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition" style="display:none">Применить правки</button>
+  </div>
+  <div id="bpmnViewer" class="w-full h-[80vh] bg-white rounded shadow mb-4"></div>
+  <div id="analysisResults" class="bg-white p-4 rounded shadow text-gray-800"></div>
+  <script type="module">
+    import { layoutProcess } from 'https://cdn.skypack.dev/bpmn-auto-layout';
+    const viewer = new BpmnJS({ container: '#bpmnViewer', keyboard: { bindTo: window } });
+    // State
+    let eventChainData = null;
+    let currentBpmnFile = null;
+    let savedChains = JSON.parse(localStorage.getItem('savedChains') || '[]');
+    // UI Helpers
+    function updateSavedChainsList() {
+      const sel = document.getElementById('savedChains');
+      sel.innerHTML = savedChains.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ru-RU'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+    }
+    // --- API Calls ---
+    async function generateEventChain() {
+      const desc = processDescription.value.trim();
+      if (!desc) { speak('Пожалуйста, опишите процесс перед созданием цепочки'); return; }
+      speak('Генерирую цепочку событий...');
+      const resp = await fetch('/generate-event-chain', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ process_description: desc })
+      });
+      if (!resp.ok) { speak('Ошибка при генерации цепочки'); return; }
+      eventChainData = await resp.json();
+      saveChainName.disabled = false;
+      speak('Цепочка сгенерирована');
+    }
+    async function saveChain() {
+      const name = saveChainName.value.trim();
+      if (!name || !eventChainData) return;
+      savedChains.push({ name, data: eventChainData, bpmn_file: currentBpmnFile });
+      localStorage.setItem('savedChains', JSON.stringify(savedChains));
+      updateSavedChainsList();
+      speak('Цепочка сохранена');
+    }
+    async function loadChain(name) {
+      if (!name) name = savedChains.length? savedChains[0].name : null;
+      const chain = savedChains.find(c => c.name === name);
+      if (chain) {
+        eventChainData = chain.data;
+        currentBpmnFile = chain.bpmn_file;
+        speak('Цепочка загружена');
+      }
+    }
+    async function generateBPMN() {
+      if (!eventChainData) { speak('Сначала создайте цепочку'); return; }
+      speak('Генерирую BPMN-диаграмму...');
+      const filename = diagramName.value || null;
+      const resp = await fetch('/generate-bpmn', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ event_chain: eventChainData, filename })
+      });
+      if (!resp.ok) { speak('Ошибка создания BPMN'); return; }
+      const { bpmn_xml } = await resp.json();
+      const laid = await layoutProcess(bpmn_xml);
+      await viewer.importXML(laid);
+      viewer.get('canvas').zoom('fit-viewport');
+      speak('BPMN-диаграмма готова');
+    }
+    async function visualizeExisting() {
+      const file = existingDiagram.value.trim();
+      if (!file) { speak('Введите имя файла диаграммы'); return; }
+      speak('Загружаю диаграмму...');
+      const resp = await fetch(`/diagram/${encodeURIComponent(file)}`);
+      if (!resp.ok) { speak('Файл не найден'); return; }
+      const xml = await resp.text();
+      const laid = await layoutProcess(xml);
+      await viewer.importXML(laid);
+      viewer.get('canvas').zoom('fit-viewport');
+      speak('Диаграмма загружена');
+    }
+    async function analyzeDiagram() {
+      if (!eventChainData) { speak('Сначала создайте цепочку'); return; }
+      speak('Анализирую диаграмму...');
+      const resp = await fetch('/analyze-diagram', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ bpmn_json: eventChainData })
+      });
+      if (!resp.ok) { speak('Ошибка анализа диаграммы'); return; }
+      const analysis = await resp.json();
+      const errs = analysis.algorithm_errors||[];
+      const recs = analysis.llm_recommendations?.recommendations||[];
+      let html = `<h3 class="text-lg font-semibold mb-2">Результаты анализа</h3>`;
+      html += `<div class="mb-2"><strong>Ошибки:</strong> ${errs.length? errs.map(e=>`<div>– ${e.message}</div>`).join('') : 'нет'}</div>`;
+      html += `<div><strong>Рекомендации:</strong> ${recs.length? recs.map(r=>`<div>– ${r}</div>`).join('') : 'нет'}</div>`;
+      analysisResults.innerHTML = html;
+      btnApplyFixes.style.display = 'block';
+      speak('Анализ завершён');
+    }
+    async function applyFixes() {
+      speak('Применяю исправления...');
+      const aResp = await fetch('/analyze-diagram', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ bpmn_json: eventChainData }) });
+      const analysis = await aResp.json();
+      const fixResp = await fetch('/apply-fixes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ original: eventChainData, analysis }) });
+      if (!fixResp.ok) { speak('Ошибка применения исправлений'); return; }
+      const { modified_data, bpmn_xml } = await fixResp.json();
+      eventChainData = modified_data;
+      const laid = await layoutProcess(bpmn_xml);
+      await viewer.importXML(laid);
+      viewer.get('canvas').zoom('fit-viewport');
+      speak('Исправления применены');
+    }
+
+    // --- Voice Recording via MediaRecorder + AssemblyAI on FastAPI /transcribe ---
+    let mediaRecorder, audioChunks = [];
+    const btnRec = document.getElementById('btnStartRec');
+    const desc   = document.getElementById('processDescription');
+
+    // Запрашиваем микрофон
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+          btnRec.classList.remove('recording');
+          btnRec.textContent = 'Говорить';
+          const blob = new Blob(audioChunks, { type: 'audio/wav' });
+          audioChunks = [];
+
+          // Формируем FormData и отправляем на тот же сервер (FastAPI на 8000)
+          const form = new FormData();
+          form.append('audio', blob, 'rec.wav');
+
+          try {
+            const res = await fetch('/transcribe', {
+              method: 'POST',
+              body: form
+            });
+            const j = await res.json();
+            if (j.success) {
+              handleVoiceCommand(j.text); // Обработка команд
+              speak('Текст распознан');
+            } else {
+              alert('Ошибка транскрипции: ' + j.detail || j.error);
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Не удалось связаться с сервером транскрипции');
+          }
+        };
+      })
+      .catch(err => {
+        console.error('Ошибка доступа к микрофону:', err);
+        alert('Пожалуйста, разрешите доступ к микрофону');
+      });
+
+    // Переключаем запись по кнопке
+    btnRec.addEventListener('click', () => {
+      if (!mediaRecorder) return;
+      if (mediaRecorder.state === 'inactive') {
+        audioChunks = [];
+        mediaRecorder.start();
+        btnRec.classList.add('recording');
+        btnRec.textContent = 'Остановить';
+      } else {
+        mediaRecorder.stop();
+      }
+    });
+
+    // Обработка голосовых команд
+    function handleVoiceCommand(text) {
+      const cmd = text.toLowerCase().trim();
+      desc.value = text; // Всегда обновляем описание
+
+      if (cmd.startsWith('опиши процесс')) {
+        const cleanDesc = text.replace(/опиши процесс[:\s]*/i, '').trim();
+        desc.value = cleanDesc;
+        speak('Описание сохранено');
+      } else if (cmd === 'создать цепочку') {
+        generateEventChain();
+      } else if (cmd.startsWith('сохранить цепочку')) {
+        const name = cmd.replace(/сохранить цепочку/i, '').trim();
+        saveChainName.value = name;
+        saveChain();
+      } else if (cmd.startsWith('загрузить цепочку')) {
+        const name = cmd.replace(/загрузить цепочку/i, '').trim();
+        loadChain(name);
+      } else if (cmd.startsWith('создать bpmn')) {
+        const filename = cmd.replace(/создать bpmn/i, '').trim();
+        diagramName.value = filename;
+        generateBPMN();
+      } else if (cmd.startsWith('загрузить диаграмму')) {
+        const filename = cmd.replace(/загрузить диаграмму/i, '').trim();
+        existingDiagram.value = filename;
+        visualizeExisting();
+      } else if (cmd === 'анализ') {
+        analyzeDiagram();
+      } else if (cmd === 'применить исправления') {
+        applyFixes();
+      } else {
+        speak('Команда не распознана');
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateSavedChainsList();
+      btnSaveChain.onclick     = saveChain;
+      btnLoadChain.onclick     = () => loadChain();
+      btnGenerateBPMN.onclick  = generateBPMN;
+      btnGenerateChain.onclick = generateEventChain;
+      btnVisualize.onclick     = visualizeExisting;
+      btnAnalyze.onclick       = analyzeDiagram;
+      btnApplyFixes.onclick    = applyFixes;
+    });
+  </script>
+</body>
+</html>
